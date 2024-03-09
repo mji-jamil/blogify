@@ -15,11 +15,7 @@ export default function PrivateRoutes() {
                     <PostProvider>
                         <ProfileProvider>
                             <Header />
-                            <main className="mx-auto max-w-[1020px] py-8">
-                                <div className="container">
-                                    <Outlet />
-                                </div>
-                            </main>
+                            <Outlet />
                             <Footer />
                         </ProfileProvider>
                     </PostProvider>
