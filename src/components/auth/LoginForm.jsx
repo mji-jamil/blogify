@@ -7,6 +7,7 @@ import axios from "axios";
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const { auth } = useAuth();
     const { setAuth } = useAuth();
     const {
         register,
@@ -39,6 +40,7 @@ const LoginForm = () => {
             });
         }
     };
+    // console.log(auth?.user?.firstName);
     return (
         <>
             <form action="" onSubmit={handleSubmit(submitForm)}>

@@ -23,7 +23,7 @@ export default function BlogMainCard({ blog, index, toggleModal, showModals }) {
                 <div className="mt-2 relative">
                     <Link to="/singleBlog">
                         <h3 className="text-slate-300 text-xl lg:text-2xl">
-                            <Link to="/singleBlog">{blog.title}</Link>
+                            {blog.title}
                         </h3>
                     </Link>
                     <p className="mb-6 text-base text-slate-500 mt-1">
@@ -43,12 +43,12 @@ export default function BlogMainCard({ blog, index, toggleModal, showModals }) {
                             </div>
 
                             <div>
-                                <h5 className="text-slate-500 text-sm">
-                                    <Link to="/me">
+                                <Link to="/me">
+                                    <h5 className="text-slate-500 text-sm">
                                         {blog.author.firstName}{" "}
                                         {blog.author.lastName}
-                                    </Link>
-                                </h5>
+                                    </h5>
+                                </Link>
                                 <div className="flex items-center text-xs text-slate-700">
                                     <span>{formatDate(blog.createdAt)}</span>
                                 </div>
