@@ -50,6 +50,17 @@ const profileReducer = (state, action) => {
             };
         }
 
+        case actions.profile.BIO_EDITED: {
+            return {
+                ...state,
+                loading: false,
+                user: {
+                    ...state.user,
+                    bio: action.data.bio,
+                },
+            };
+        }
+
         case actions.profile.IMAGE_UPDATED: {
             return {
                 ...state,

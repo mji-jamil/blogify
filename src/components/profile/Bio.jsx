@@ -22,10 +22,12 @@ const Bio = () => {
                 { bio },
             );
 
+            console.log(response.data.user.bio);
+
             if (response.status === 200) {
                 dispatch({
                     type: actions.profile.USER_DATA_EDITED,
-                    data: response.data,
+                    data: response.data.user,
                 });
             }
             setEditMode(false);

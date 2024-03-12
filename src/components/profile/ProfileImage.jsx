@@ -1,10 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import EditIcon from "../../assets/icons/edit.svg";
 import useAxios from "../../hooks/useAxios";
 import { useProfile } from "../../hooks/useProfile";
-
 import { actions } from "../../actions";
-import { useAuth } from "../../hooks/useAuth.js";
 
 const ProfileImage = () => {
     const { state, dispatch } = useProfile();
@@ -29,7 +27,6 @@ const ProfileImage = () => {
                 `${import.meta.env.VITE_SERVER_BASE_URL}/profile/avatar`,
                 formData,
             );
-            console.log(response);
             if (response.status === 200) {
                 dispatch({
                     type: actions.profile.IMAGE_UPDATED,
@@ -43,8 +40,6 @@ const ProfileImage = () => {
             });
         }
     };
-
-    console.log(state?.user);
 
     return (
         <div className="relative mb-8 max-h-[180px] max-w-[180px] rounded-full lg:mb-11 lg:max-h-[218px] lg:max-w-[218px]">

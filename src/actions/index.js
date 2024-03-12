@@ -7,6 +7,7 @@ export const actions = {
         IMAGE_UPDATED: "PROFILE_IMAGE_UPDATED",
         USER_DATA_UPDATED: "USER_DATA_UPDATED",
         BLOGS: "BLOGS",
+        BIO_EDITED: "BIO_EDITED",
     },
     blog: {
         DATA_FETCHING: "POST_DATA_FETCHING",
