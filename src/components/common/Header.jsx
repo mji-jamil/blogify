@@ -14,7 +14,7 @@ const Header = () => {
     const currentPath = location.pathname;
 
     const user = state?.user ?? auth?.user;
-    console.log("Auth:", auth);
+    // console.log("Auth:", auth);
     return (
         <>
             <header className="p-1">
@@ -73,32 +73,31 @@ const Header = () => {
                                     <Logout />
                                 </>
                             )}
-                            <li>
-                                {!auth.user && (
-                                    <>
-                                        {currentPath === "/login" && (
-                                            <li>
-                                                <Link
-                                                    to="/register"
-                                                    className="text-white/50 hover:text-white transition-all duration-200 pr-4"
-                                                >
-                                                    Register
-                                                </Link>
-                                            </li>
-                                        )}
-                                        {currentPath === "/register" && (
-                                            <li>
-                                                <Link
-                                                    to="/login"
-                                                    className="text-white/50 hover:text-white transition-all duration-200 pr-4"
-                                                >
-                                                    Login
-                                                </Link>
-                                            </li>
-                                        )}
-                                    </>
-                                )}
-                            </li>
+
+                            {!auth.user && (
+                                <>
+                                    {currentPath === "/login" && (
+                                        <li>
+                                            <Link
+                                                to="/register"
+                                                className="text-white/50 hover:text-white transition-all duration-200 pr-4"
+                                            >
+                                                Register
+                                            </Link>
+                                        </li>
+                                    )}
+                                    {currentPath === "/register" && (
+                                        <li>
+                                            <Link
+                                                to="/login"
+                                                className="text-white/50 hover:text-white transition-all duration-200 pr-4"
+                                            >
+                                                Login
+                                            </Link>
+                                        </li>
+                                    )}
+                                </>
+                            )}
                         </ul>
                     </div>
                 </nav>

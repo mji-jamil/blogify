@@ -44,7 +44,7 @@ const Bio = () => {
             <div className="flex-1">
                 {!editMode ? (
                     <p className="leading-[188%] text-gray-400 lg:text-lg">
-                        {state?.user?.user?.bio ?? auth?.user?.bio}
+                        {state?.user?.bio}
                     </p>
                 ) : (
                     <textarea
