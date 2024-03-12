@@ -2,6 +2,8 @@ import { actions } from "../actions";
 
 const initialState = {
     blogs: [],
+    popularBlogs: [],
+    favouriteBlogs: [],
     loading: false,
     error: null,
 };
@@ -19,6 +21,22 @@ const blogReducer = (state, action) => {
             return {
                 ...state,
                 blogs: action.data.blogs,
+                loading: false,
+            };
+        }
+
+        case actions.blog.DATA_FETCHING_POPULAR: {
+            return {
+                ...state,
+                popularBlogs: action.data.blogs,
+                loading: false,
+            };
+        }
+
+        case actions.blog.DATA_FETCHED_FAVOURTIE: {
+            return {
+                ...state,
+                favouriteBlogs: action.data.blogs,
                 loading: false,
             };
         }

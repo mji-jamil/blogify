@@ -4,6 +4,12 @@ import EditIcon from "../../assets/icons/edit.svg";
 import DeleteIcon from "../../assets/icons/delete.svg";
 
 export default function BlogMainCard({ blog, index, toggleModal, showModals }) {
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+
+        const options = { day: "numeric", month: "long", year: "numeric" };
+        return date.toLocaleDateString("en-GB", options);
+    }
     return (
         <>
             <div className="blog-card">
@@ -28,11 +34,11 @@ export default function BlogMainCard({ blog, index, toggleModal, showModals }) {
                         <div className="flex items-center capitalize space-x-2">
                             <div className="avater-img bg-indigo-600 text-white">
                                 <img
-                                    className="blog-thumb"
                                     src={`${
                                         import.meta.env.VITE_SERVER_BASE_URL
                                     }/uploads/avatar/${blog.author.avatar}`}
                                     alt="avatar"
+                                    className="rounded-full"
                                 />
                             </div>
 
@@ -44,7 +50,7 @@ export default function BlogMainCard({ blog, index, toggleModal, showModals }) {
                                     </Link>
                                 </h5>
                                 <div className="flex items-center text-xs text-slate-700">
-                                    <span>{blog.createdAt}</span>
+                                    <span>{formatDate(blog.createdAt)}</span>
                                 </div>
                             </div>
                         </div>

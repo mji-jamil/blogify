@@ -2,7 +2,7 @@ import { useState } from "react";
 import BlogSideCard from "./BlogSideCard.jsx";
 import BlogMainCard from "./BlogMainCard.jsx";
 
-export default function BlogLists({ blogs }) {
+export default function BlogLists({ blogs, popularBlogs, favouriteBlogs }) {
     const [showModals, setShowModals] = useState(
         Array(blogs.length).fill(false),
     );
@@ -30,7 +30,10 @@ export default function BlogLists({ blogs }) {
                                 ))}
                             </div>
 
-                            <BlogSideCard />
+                            <BlogSideCard
+                                blogs={popularBlogs}
+                                favouriteBlogs={favouriteBlogs}
+                            />
                         </div>
                     </div>
                 </section>

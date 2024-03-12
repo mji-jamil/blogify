@@ -1,4 +1,4 @@
-import { actions } from "../actions/index.js";
+import { actions } from "../actions";
 
 const initialState = {
     user: null,
@@ -16,12 +16,21 @@ const profileReducer = (state, action) => {
             };
         }
 
+        case actions.profile.BLOGS: {
+            return {
+                ...state,
+                loading: false,
+                posts: action.data.blogs,
+            };
+        }
+
         case actions.profile.DATA_FETCHED: {
             return {
                 ...state,
                 loading: false,
-                user: action.data.user,
-                posts: action.data.posts,
+                // user: action.data.user,
+                user: action.data,
+                posts: action.data.blogs,
             };
         }
 

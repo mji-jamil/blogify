@@ -41,16 +41,24 @@ const Header = () => {
                                 </Link>
                             </li>
                             <li>
-                                <Link
-                                    to="/login"
-                                    className="text-white/50 hover:text-white transition-all duration-200"
-                                >
-                                    Login
-                                </Link>
+                                {!auth && (
+                                    <Link
+                                        to="/login"
+                                        className="text-white/50 hover:text-white transition-all duration-200"
+                                    >
+                                        Login
+                                    </Link>
+                                )}
                             </li>
                             <li className="flex items-center">
                                 <div className="avater-img bg-orange-600 text-white">
-                                    <span className="">S</span>
+                                    <img
+                                        className="max-w-full rounded-full"
+                                        src={`${
+                                            import.meta.env.VITE_SERVER_BASE_URL
+                                        }/uploads/avatar/${user?.avatar}`}
+                                        alt={state?.user?.firstName}
+                                    />
                                 </div>
 
                                 <Link to="/me">

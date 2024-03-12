@@ -1,25 +1,52 @@
 import useAxios from "../hooks/useAxios.js";
-import { useBlog } from "../hooks/useBlog.js";
 import { useContext, useEffect } from "react";
 import { actions } from "../actions/index.js";
 import BlogLists from "../components/posts/BlogLists.jsx";
 import { BlogContext } from "../context/index.js";
+import NewBlog from "../components/posts/NewBlog.jsx";
 
 const HomePage = () => {
     const { state, dispatch } = useContext(BlogContext);
     const { api } = useAxios();
+
     useEffect(() => {
         dispatch({ type: actions.blog.DATA_FETCHING });
-
         const fetchPost = async () => {
             try {
-                const response = await api.get(
-                    `${import.meta.env.VITE_SERVER_BASE_URL}/blogs`,
-                );
-                if (response.status === 200) {
+                const [allResponse, popularResponse, favouritesResponse] =
+                    await Promise.all([
+                        api.get(
+                            `${import.meta.env.VITE_SERVER_BASE_URL}/blogs`,
+                        ),
+                        api.get(
+                            `${
+                                import.meta.env.VITE_SERVER_BASE_URL
+                            }/blogs/popular`,
+                        ),
+                        api.get(
+                            `${
+                                import.meta.env.VITE_SERVER_BASE_URL
+                            }/blogs/favourites`,
+                        ),
+                    ]);
+
+                if (
+                    allResponse.status === 200 &&
+                    popularResponse.status === 200 &&
+                    favouritesResponse.status === 200
+                ) {
                     dispatch({
                         type: actions.blog.DATA_FETCHED,
-                        data: response.data,
+                        data: allResponse.data,
+                    });
+                    dispatch({
+                        type: actions.blog.DATA_FETCHING_POPULAR,
+                        data: popularResponse.data,
+                    });
+
+                    dispatch({
+                        type: actions.blog.DATA_FETCHED_FAVOURTIE,
+                        data: favouritesResponse.data,
                     });
                 }
             } catch (error) {
@@ -43,7 +70,11 @@ const HomePage = () => {
     }
     return (
         <>
-            <BlogLists blogs={state?.blogs} />
+            <BlogLists
+                blogs={state?.blogs}
+                popularBlogs={state?.popularBlogs}
+                favouriteBlogs={state?.favouriteBlogs}
+            />
         </>
     );
 };
