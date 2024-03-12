@@ -49,6 +49,14 @@ const blogReducer = (state, action) => {
             };
         }
 
+        case actions.blog.DATA_APPENDED: {
+            return {
+                ...state,
+                blogs: [...state.blogs, ...action.data.blogs],
+                loading: false,
+            };
+        }
+
         case actions.blog.POST_CREATED: {
             return {
                 ...state,

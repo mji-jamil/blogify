@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ThreeDotsIcon from "../../assets/icons/3dots.svg";
 import EditIcon from "../../assets/icons/edit.svg";
 import DeleteIcon from "../../assets/icons/delete.svg";
+import React from "react";
 
 export default function BlogMainCard({ blog, index, toggleModal, showModals }) {
     function formatDate(dateString) {

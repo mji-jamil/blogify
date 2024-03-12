@@ -1,8 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import BlogSideCard from "./BlogSideCard.jsx";
 import BlogMainCard from "./BlogMainCard.jsx";
+import ScrollUpIcon from "../../assets/icons/scroll-up.png";
 
-export default function BlogLists({ blogs, popularBlogs, favouriteBlogs }) {
+export default function BlogLists({
+    blogs,
+    popularBlogs,
+    favouriteBlogs,
+    showEndMessage,
+    handleGoTop,
+}) {
     const [showModals, setShowModals] = useState(
         Array(blogs.length).fill(false),
     );
@@ -26,8 +33,29 @@ export default function BlogLists({ blogs, popularBlogs, favouriteBlogs }) {
                                         key={blog.id}
                                         toggleModal={toggleModal}
                                         showModals={showModals}
+                                        showEndMessage={showEndMessage}
                                     />
                                 ))}
+                                {showEndMessage && (
+                                    <div className="py-2 px-4 rounded mt-4 flex justify-center items-center">
+                                        <p className="text-white-800 font-bold text-lg mr-4">
+                                            Blog ended.
+                                        </p>
+                                        <button
+                                            className="flex items-center"
+                                            onClick={handleGoTop}
+                                        >
+                                            <p className="text-white-800 font-bold text-lg">
+                                                Go to top
+                                            </p>
+                                            <img
+                                                src={ScrollUpIcon}
+                                                alt=""
+                                                className="ml-2"
+                                            />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
                             <BlogSideCard

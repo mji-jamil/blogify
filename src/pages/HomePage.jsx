@@ -3,13 +3,10 @@ import { useContext, useEffect } from "react";
 import { actions } from "../actions/index.js";
 import BlogLists from "../components/posts/BlogLists.jsx";
 import { BlogContext } from "../context/index.js";
-import NewBlog from "../components/posts/NewBlog.jsx";
-import { useAuth } from "../hooks/useAuth.js";
 
 const HomePage = () => {
-    const { state, dispatch } = useContext(BlogContext);
     const { api } = useAxios();
-    const { auth } = useAuth();
+    const { state, dispatch } = useContext(BlogContext);
 
     useEffect(() => {
         dispatch({ type: actions.blog.DATA_FETCHING });
@@ -71,7 +68,6 @@ const HomePage = () => {
         return <div> Error in fetching posts {state?.error?.message}</div>;
     }
 
-    // console.log(`Auth: ${auth.user.firstName}`);
     return (
         <>
             <BlogLists
