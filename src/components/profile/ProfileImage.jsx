@@ -8,41 +8,8 @@ import { useAuth } from "../../hooks/useAuth.js";
 
 const ProfileImage = () => {
     const { state, dispatch } = useProfile();
-    const { auth } = useAuth();
-
     const { api } = useAxios();
     const fileUploaderRef = useRef();
-
-    useEffect(() => {
-        dispatch({ type: actions.profile.DATA_FETCHING });
-
-        const fetchPost = async () => {
-            try {
-                const response = await api.get(
-                    `${import.meta.env.VITE_SERVER_BASE_URL}/profile/${
-                        state.user.id
-                    }`,
-                );
-
-                // console.log(response.data);
-
-                if (response.status === 200) {
-                    dispatch({
-                        type: actions.profile.DATA_FETCHED,
-                        data: response.data,
-                    });
-                }
-            } catch (error) {
-                console.error(error);
-                dispatch({
-                    type: actions.profile.DATA_FETCH_ERROR,
-                    error: error.message,
-                });
-            }
-        };
-
-        fetchPost();
-    }, []);
 
     const handleImageUpload = (event) => {
         event.preventDefault();
@@ -58,14 +25,15 @@ const ProfileImage = () => {
                 formData.append("avatar", file);
             }
 
-            const response = await api.patch(
-                `${import.meta.env.VITE_SERVER_BASE_URL}/profile`,
+            const response = await api.post(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/profile/avatar`,
                 formData,
             );
+            console.log(response);
             if (response.status === 200) {
                 dispatch({
                     type: actions.profile.IMAGE_UPDATED,
-                    data: response.data,
+                    data: response.data.user,
                 });
             }
         } catch (error) {
@@ -76,7 +44,7 @@ const ProfileImage = () => {
         }
     };
 
-    // console.log(state);
+    console.log(state?.user);
 
     return (
         <div className="relative mb-8 max-h-[180px] max-w-[180px] rounded-full lg:mb-11 lg:max-h-[218px] lg:max-w-[218px]">

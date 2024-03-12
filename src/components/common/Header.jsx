@@ -56,7 +56,7 @@ const Header = () => {
                                         className="max-w-full rounded-full"
                                         src={`${
                                             import.meta.env.VITE_SERVER_BASE_URL
-                                        }/uploads/avatar/${user?.avatar}`}
+                                        }/uploads/avatar/${auth?.user?.avatar}`}
                                         alt={state?.user?.firstName}
                                     />
                                 </div>
