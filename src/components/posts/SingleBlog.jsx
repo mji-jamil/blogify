@@ -5,10 +5,13 @@ import { useAuth } from "../../hooks/useAuth.js";
 import LikeIcon from "../../assets/icons/like.svg";
 import CommentIcon from "../../assets/icons/comment.svg";
 import HeartIcon from "../../assets/icons/heart.svg";
+import HeartFillIcon from "../../assets/icons/heart-filled.svg";
+import LikeFillIcon from "../../assets/icons/like-fill.png";
 
 export default function SingleBlog() {
     const [blogData, setBlogData] = useState(null);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [isLike, setIsLike] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const { id } = useParams();
     // const { state } = useProfile();
@@ -40,6 +43,7 @@ export default function SingleBlog() {
                 ...prevData,
                 likes: response.data.likes,
             }));
+            setIsLike((prevIsLike) => !prevIsLike);
         } catch (error) {
             console.error("Error liking blog:", error);
         }
@@ -279,12 +283,20 @@ export default function SingleBlog() {
             <div className="floating-action">
                 <ul className="floating-action-menus">
                     <li onClick={handleLike}>
-                        <img src={LikeIcon} alt="like" />
+                        {isLike ? (
+                            <img src={LikeFillIcon} alt="like" />
+                        ) : (
+                            <img src={LikeIcon} alt="like" />
+                        )}
                         <span>{blogData?.likes?.length}</span>
                     </li>
 
                     <li onClick={handleFavorite}>
-                        <img src={HeartIcon} alt="Favourite" />
+                        {isFavorite ? (
+                            <img src={HeartFillIcon} alt="Favourite" />
+                        ) : (
+                            <img src={HeartIcon} alt="Favourite" />
+                        )}
                     </li>
                     <a href="#comments">
                         <li>
