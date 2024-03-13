@@ -10,7 +10,6 @@ const Header = () => {
     const { state } = useProfile() || {};
 
     const user = state?.user ?? auth?.user;
-    console.log(state);
 
     return (
         <>
@@ -49,12 +48,6 @@ const Header = () => {
                                             {user?.avatar ? (
                                                 <img
                                                     className="max-w-full rounded-full"
-                                                    // src={`${
-                                                    //     import.meta.env
-                                                    //         .VITE_SERVER_BASE_URL
-                                                    // }/uploads/avatar/${
-                                                    //     user?.avatar
-                                                    // }`}
                                                     src={`${
                                                         import.meta.env
                                                             .VITE_SERVER_BASE_URL

@@ -1,12 +1,6 @@
-import Header from "../common/Header.jsx";
-import Footer from "../common/Footer.jsx";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import ProfileImage from "./ProfileImage.jsx";
-import Bio from "./Bio.jsx";
 import useAxios from "../../hooks/useAxios.js";
-import EditIcon from "../../assets/icons/edit.svg";
-import CheckIcon from "../../assets/icons/check-mark-48.png";
 import AuthorBlogs from "./AuthorBlogs.jsx";
 
 export default function AuthorProfile() {
@@ -43,16 +37,16 @@ export default function AuthorProfile() {
                                 alt={authorData?.firstName}
                             />
 
-                            <form id="form" encType="multipart/form-data">
-                                <button
-                                    className="flex-center absolute bottom-4 right-4 h-7 w-7 rounded-full bg-black/50 hover:bg-black/80"
-                                    // onClick={handleImageUpload}
-                                    type="submit"
-                                >
-                                    <img src={EditIcon} alt="Edit" />
-                                </button>
-                                <input id="file" type="file" hidden />
-                            </form>
+                            {/*<form id="form" encType="multipart/form-data">*/}
+                            {/*    <button*/}
+                            {/*        className="flex-center absolute bottom-4 right-4 h-7 w-7  bg-black/50 hover:bg-black/80"*/}
+                            {/*        // onClick={handleImageUpload}*/}
+                            {/*        type="submit"*/}
+                            {/*    >*/}
+                            {/*        /!*<img src={EditIcon} alt="Edit" />*!/*/}
+                            {/*    </button>*/}
+                            {/*<input id="file" type="file" hidden />*/}
+                            {/*</form>*/}
                         </div>
                         <div>
                             <h3 className="text-2xl font-semibold text-white lg:text-[28px]">
