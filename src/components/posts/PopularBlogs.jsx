@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../../hooks/useAuth.js";
 
 export default function PopularBlogs({ blogs }) {
+    const { auth } = useAuth();
     return (
         <>
             <div className="sidebar-card">
@@ -17,7 +19,13 @@ export default function PopularBlogs({ blogs }) {
                             </h3>
                             <p className="text-slate-600 text-sm">
                                 by{" "}
-                                <Link to="me">
+                                <Link
+                                    to={
+                                        auth?.user?.id !== blog?.author?.id
+                                            ? `/author/${blog?.author?.id}`
+                                            : `/me`
+                                    }
+                                >
                                     {blog.author.firstName}{" "}
                                     {blog.author.lastName}
                                 </Link>

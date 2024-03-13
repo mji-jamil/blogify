@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios.js";
 import { useProfile } from "../../hooks/useProfile.js";
@@ -139,10 +139,18 @@ export default function SingleBlog() {
                                         />
                                     </span>
                                 </div>
-                                <h5 className="text-slate-500 text-sm">
-                                    {blogData?.author?.firstName}{" "}
-                                    {blogData?.author?.lastName}
-                                </h5>
+                                <Link
+                                    to={
+                                        auth?.user?.id !== blogData?.author?.id
+                                            ? `/author/${blogData?.author?.id}`
+                                            : `/me`
+                                    }
+                                >
+                                    <h5 className="text-slate-500 text-sm">
+                                        {blogData?.author?.firstName}{" "}
+                                        {blogData?.author?.lastName}
+                                    </h5>
+                                </Link>
                             </div>
                             <span className="text-sm text-slate-700 dot">
                                 {formatDate(blogData?.createdAt)}

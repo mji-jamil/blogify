@@ -14,7 +14,6 @@ const Header = () => {
     const currentPath = location.pathname;
 
     const user = state?.user ?? auth?.user;
-    // console.log("Auth:", auth);
     return (
         <>
             <header className="p-1">

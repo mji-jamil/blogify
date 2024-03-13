@@ -60,7 +60,13 @@ export default function BlogMainCard({ blog, onDelete }) {
                             </div>
 
                             <div>
-                                <Link to="/me">
+                                <Link
+                                    to={
+                                        auth?.user?.id !== blog?.author?.id
+                                            ? `/author/${blog?.author?.id}`
+                                            : `/me`
+                                    }
+                                >
                                     <h5 className="text-slate-500 text-sm">
                                         {blog?.author?.firstName}{" "}
                                         {blog?.author?.lastName}

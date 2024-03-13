@@ -10,6 +10,7 @@ import HomePage from "./pages/HomePage.jsx";
 import SingleBlog from "./components/posts/SingleBlog.jsx";
 import Search from "./pages/Search.jsx";
 import EditBlog from "./components/posts/EditBlog.jsx";
+import AuthorProfile from "./components/profile/AuthorProfile.jsx";
 
 const App = () => {
     return (
@@ -23,6 +24,7 @@ const App = () => {
                     <Route path="/blog/edit/:id" element={<EditBlog />} />
                     <Route path="/search" element={<Search />} />
                 </Route>
+                <Route path="/author/:id" element={<AuthorProfile />} />
 
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegistrationPage />} />
