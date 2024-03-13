@@ -61,7 +61,7 @@ const blogReducer = (state, action) => {
             return {
                 ...state,
                 loading: false,
-                blogs: [...state.posts, action.data],
+                blogs: [...state.blogs, action.data],
             };
         }
 
@@ -69,11 +69,11 @@ const blogReducer = (state, action) => {
             return {
                 ...state,
                 loading: false,
-                blogs: state.posts.filter((item) => item.id !== action.data),
+                blogs: state.blogs.filter((item) => item.id !== action.data),
             };
         }
 
-        case actions.post.DATA_EDITED: {
+        case actions.blog.DATA_EDITED: {
             return {
                 ...state,
                 loading: false,

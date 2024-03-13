@@ -1,7 +1,9 @@
-import React, { useState } from "react";
 import BlogSideCard from "./BlogSideCard.jsx";
 import BlogMainCard from "./BlogMainCard.jsx";
 import ScrollUpIcon from "../../assets/icons/scroll-up.png";
+import useAxios from "../../hooks/useAxios.js";
+import { useBlog } from "../../hooks/useBlog.js";
+import { actions } from "../../actions/index.js";
 
 export default function BlogLists({
     blogs,
@@ -10,14 +12,25 @@ export default function BlogLists({
     showEndMessage,
     handleGoTop,
 }) {
-    const [showModals, setShowModals] = useState(
-        Array(blogs.length).fill(false),
-    );
-    const toggleModal = (index) => {
-        const newShowModals = [...showModals];
-        newShowModals[index] = !newShowModals[index];
-        setShowModals(newShowModals);
-    };
+    const { api } = useAxios();
+    const { dispatch } = useBlog();
+
+    async function handleDelete(blogId) {
+        dispatch({ type: actions.blog.DATA_FETCHING });
+        try {
+            const response = await api.delete(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${blogId}`,
+            );
+            if (response.status === 200) {
+                dispatch({
+                    type: actions.blog.POST_DELETED,
+                    data: blogId,
+                });
+            }
+        } catch (error) {
+            console.error("Error deleting blog:", error);
+        }
+    }
 
     return (
         <>
@@ -29,11 +42,8 @@ export default function BlogLists({
                                 {blogs.map((blog, index) => (
                                     <BlogMainCard
                                         blog={blog}
-                                        index={index}
-                                        key={blog.id}
-                                        toggleModal={toggleModal}
-                                        showModals={showModals}
-                                        showEndMessage={showEndMessage}
+                                        key={blog?.id || index}
+                                        onDelete={handleDelete}
                                     />
                                 ))}
                                 {showEndMessage && (

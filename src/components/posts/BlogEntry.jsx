@@ -1,18 +1,20 @@
 import { useForm } from "react-hook-form";
 import { actions } from "../../actions";
-import AddPhoto from "../../assets/icons/addPhoto.svg";
 import { useAuth } from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import { useBlog } from "../../hooks/useBlog.js";
 import { useProfile } from "../../hooks/useProfile";
 import Field from "../common/Field";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
-const PostEntry = ({ onCreate }) => {
+const BlogEntry = () => {
+    const [blogImage, setBlogImage] = useState(null);
     const { auth } = useAuth();
     const { dispatch } = useBlog();
     const { api } = useAxios();
     const { state: profile } = useProfile();
+    const navigate = useNavigate();
 
     const user = profile?.user ?? auth?.user;
 
@@ -24,28 +26,44 @@ const PostEntry = ({ onCreate }) => {
     } = useForm();
 
     const handleBlogSubmit = async (formData) => {
-        console.log(formData);
         dispatch({ type: actions.blog.DATA_FETCHING });
 
         try {
+            const formDataObj = new FormData();
+            formDataObj.append("title", formData.title);
+            formDataObj.append("tags", formData.tags);
+            formDataObj.append("content", formData.content);
+            if (blogImage) {
+                formDataObj.append("thumbnail", blogImage);
+            }
+            formDataObj.append("author", user);
+            formDataObj.append("likes", []);
+            formDataObj.append("comments", []);
+            formDataObj.append("createdAt", Date.now());
             const response = await api.post(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/blogs`,
-                { formData },
+                formDataObj,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                },
             );
 
-            if (response.status === 200) {
+            console.log(response.data);
+
+            if (response.status === 201) {
                 dispatch({
-                    type: actions.blog.DATA_CREATED,
+                    type: actions.blog.POST_CREATED,
                     data: response.data,
                 });
-                // Close this UI
-                onCreate();
+                navigate("/");
             }
         } catch (error) {
             console.error(error);
             dispatch({
                 type: actions.blog.DATA_FETCH_ERROR,
-                error: response.error,
+                error: error.message,
             });
         }
     };
@@ -89,6 +107,9 @@ const PostEntry = ({ onCreate }) => {
                                     name="photo"
                                     id="photo"
                                     className="hidden"
+                                    onChange={(e) =>
+                                        setBlogImage(e.target.files[0])
+                                    }
                                 />
                             </div>
                         </div>
@@ -141,6 +162,7 @@ const PostEntry = ({ onCreate }) => {
                         {/*>*/}
                         {/*    Create Blog*/}
                         {/*</Link>*/}
+
                         <button
                             className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
                             type="submit"
@@ -154,4 +176,4 @@ const PostEntry = ({ onCreate }) => {
     );
 };
 
-export default PostEntry;
+export default BlogEntry;
