@@ -9,9 +9,11 @@ import PostProvider from "./providers/PostProvider.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <AuthProvider>
-            <Router>
-                <App />
-            </Router>
+            <PostProvider>
+                <Router>
+                    <App />
+                </Router>
+            </PostProvider>
         </AuthProvider>
     </React.StrictMode>,
 );

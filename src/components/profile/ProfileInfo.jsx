@@ -4,7 +4,6 @@ import { useProfile } from "../../hooks/useProfile.js";
 import { useAuth } from "../../hooks/useAuth.js";
 
 const ProfileInfo = () => {
-    const { state } = useProfile();
     const { auth } = useAuth();
     return (
         <>

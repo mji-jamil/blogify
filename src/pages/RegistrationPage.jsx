@@ -5,7 +5,6 @@ import RegistrationForm from "../components/auth/RegistrationForm.jsx";
 const RegistrationPage = () => {
     return (
         <>
-            <Header />
             <main>
                 <section className="container">
                     <div className="w-full md:w-1/2 mx-auto bg-[#030317] p-8 rounded-md mt-12">
@@ -14,7 +13,6 @@ const RegistrationPage = () => {
                     </div>
                 </section>
             </main>
-            <Footer />
         </>
     );
 };

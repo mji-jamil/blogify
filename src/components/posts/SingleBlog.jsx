@@ -1,7 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios.js";
-import { useProfile } from "../../hooks/useProfile.js";
 import { useAuth } from "../../hooks/useAuth.js";
 import LikeIcon from "../../assets/icons/like.svg";
 import CommentIcon from "../../assets/icons/comment.svg";
@@ -12,7 +11,7 @@ export default function SingleBlog() {
     const [isFavorite, setIsFavorite] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const { id } = useParams();
-    const { state } = useProfile();
+    // const { state } = useProfile();
     const { auth } = useAuth();
     const { api } = useAxios();
     useEffect(() => {
@@ -183,56 +182,85 @@ export default function SingleBlog() {
                         <h2 className="text-3xl font-bold my-8">
                             Comments ({blogData?.comments?.length})
                         </h2>
-                        <div className="flex items -center space-x-4">
-                            <div className="avater-img bg-indigo-600 text-white">
-                                <span className="">
-                                    <img
-                                        src={`${
-                                            import.meta.env.VITE_SERVER_BASE_URL
-                                        }/uploads/avatar/${auth?.user?.avatar}`}
-                                        alt="avatar"
-                                        className="rounded-full"
-                                    />
-                                </span>
-                            </div>
-                            <div className="w-full">
-                                <textarea
-                                    className="w-full bg-[#030317] border border-slate-500 text-slate-300 p-4 rounded-md focus:outline-none"
-                                    placeholder="Write a comment"
-                                    value={commentContent}
-                                    onChange={(e) =>
-                                        setCommentContent(e.target.value)
-                                    }
-                                ></textarea>
-                                <div className="flex justify-end mt-4">
-                                    <button
-                                        className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
-                                        onClick={handleComment}
-                                    >
-                                        Comment
-                                    </button>
+                        {auth?.user ? (
+                            <div className="flex items -center space-x-4">
+                                <div className="avater-img bg-indigo-600 text-white">
+                                    {auth?.user?.avatar ? (
+                                        <img
+                                            className="max-w-full rounded-full"
+                                            src={`${
+                                                import.meta.env
+                                                    .VITE_SERVER_BASE_URL
+                                            }/uploads/avatar/${
+                                                auth?.user?.avatar
+                                            }`}
+                                            alt={auth?.user?.firstName}
+                                        />
+                                    ) : (
+                                        <div className="avater-img bg-indigo-600 text-white">
+                                            <span>
+                                                {auth?.user?.firstName.charAt(
+                                                    0,
+                                                )}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="w-full">
+                                    <textarea
+                                        className="w-full bg-[#030317] border border-slate-500 text-slate-300 p-4 rounded-md focus:outline-none"
+                                        placeholder="Write a comment"
+                                        value={commentContent}
+                                        onChange={(e) =>
+                                            setCommentContent(e.target.value)
+                                        }
+                                    ></textarea>
+                                    <div className="flex justify-end mt-4">
+                                        <button
+                                            className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
+                                            onClick={handleComment}
+                                        >
+                                            Comment
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
+                        ) : (
+                            <div className="text-center">
+                                <Link
+                                    to="/login"
+                                    className="w-full bg-indigo-600 text-white p-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
+                                >
+                                    Log in to comment
+                                </Link>
+                            </div>
+                        )}
                         {blogData?.comments?.map((comment) => (
                             <div
                                 className="flex items-start space-x-4 my-8"
                                 key={comment?.id}
                             >
-                                <div className="avater-img bg-orange-600 text-white">
-                                    <span className="">
+                                <div className="avater-img bg-indigo-600 text-white">
+                                    {comment?.author?.avatar ? (
                                         <img
+                                            className="max-w-full rounded-full"
                                             src={`${
                                                 import.meta.env
                                                     .VITE_SERVER_BASE_URL
                                             }/uploads/avatar/${
                                                 comment?.author?.avatar
                                             }`}
-                                            alt="avatar"
-                                            className="rounded-full"
+                                            alt={auth?.user?.firstName}
                                         />
-                                    </span>
+                                    ) : (
+                                        <div className="avater-img bg-indigo-600 text-white">
+                                            <span>
+                                                {comment?.author?.firstName.charAt(
+                                                    0,
+                                                )}
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="w-full">
                                     <h5 className="text-slate -500 font-bold">
@@ -259,10 +287,6 @@ export default function SingleBlog() {
                         <img src={HeartIcon} alt="Favourite" />
                     </li>
                     <a href="#comments">
-                        {/*<li>*/}
-                        {/*    <img src={CommentIcon} alt="Comments" />*/}
-                        {/*    <span>{blogData?.comments?.length}</span>*/}
-                        {/*</li>*/}
                         <li>
                             <img src={CommentIcon} alt="Comments" />
                             <span>{blogData?.comments?.length}</span>

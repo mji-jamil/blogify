@@ -12,7 +12,7 @@ const HomePage = () => {
     const [hasMore, setHasMore] = useState(true);
     const loaderRef = useRef(null);
     const [showEndMessage, setShowEndMessage] = useState(false);
-    let limit = 10;
+    const limit = 10;
 
     useEffect(() => {
         fetchInitialData();
@@ -26,30 +26,30 @@ const HomePage = () => {
                 data: { blogs: [] },
             });
 
-            const [popularResponse, favouritesResponse, blogsResponse] =
-                await Promise.all([
-                    api.get(
-                        `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/popular`,
-                    ),
-                    api.get(
-                        `${
-                            import.meta.env.VITE_SERVER_BASE_URL
-                        }/blogs/favourites`,
-                    ),
-                    axios.get(
-                        `${
-                            import.meta.env.VITE_SERVER_BASE_URL
-                        }/blogs?page=${page}&limit=${limit}`,
-                    ),
-                ]);
+            // Fetching popular blogs
+            const popularResponse = await api.get(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/popular`,
+            );
             dispatch({
                 type: actions.blog.DATA_FETCHING_POPULAR,
                 data: popularResponse.data,
             });
+
+            // Fetching favorite blogs
+            const favouritesResponse = await api.get(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/favourites`,
+            );
             dispatch({
                 type: actions.blog.DATA_FETCHED_FAVOURTIE,
                 data: favouritesResponse.data,
             });
+
+            // Fetching initial blogs
+            const blogsResponse = await axios.get(
+                `${
+                    import.meta.env.VITE_SERVER_BASE_URL
+                }/blogs?page=${page}&limit=${limit}`,
+            );
             dispatch({
                 type: actions.blog.DATA_FETCHED,
                 data: blogsResponse.data,
@@ -62,39 +62,43 @@ const HomePage = () => {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            const response = await axios.get(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/blogs?page=${page}&limit=${limit}`,
-            );
+            try {
+                const response = await axios.get(
+                    `${
+                        import.meta.env.VITE_SERVER_BASE_URL
+                    }/blogs?page=${page}&limit=${limit}`,
+                );
 
-            console.log("Fetched data:", response.data);
-            if (response.data.blogs.length === 0) {
-                setHasMore(false);
-                setShowEndMessage(true);
-            } else {
-                console.log("Appending data:", response.data);
-                dispatch({
-                    type: actions.blog.DATA_APPENDED,
-                    data: response.data,
-                });
-                setPage((prevPage) => prevPage + 1);
+                console.log("Fetched data:", response.data);
+                if (response.data.blogs.length === 0) {
+                    setHasMore(false);
+                    setShowEndMessage(true);
+                } else {
+                    console.log("Appending data:", response.data);
+                    dispatch({
+                        type: actions.blog.DATA_APPENDED,
+                        data: response.data,
+                    });
+                    setPage((prevPage) => prevPage + 1);
+                }
+            } catch (error) {
+                console.error("Error fetching more data:", error);
             }
         };
 
         const onIntersection = (items) => {
-            console.log(items);
             const loaderItem = items[0];
             if (loaderItem.isIntersecting && hasMore) {
                 fetchProducts();
             }
         };
+
         const observer = new IntersectionObserver(onIntersection);
         if (observer && loaderRef.current) {
             observer.observe(loaderRef.current);
         }
 
-        // cleanup
+        // Cleanup
         return () => {
             if (observer) observer.disconnect();
         };

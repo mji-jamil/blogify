@@ -12,13 +12,9 @@ export default function PrivateRoutes() {
         <>
             {auth.authToken ? (
                 <>
-                    <PostProvider>
-                        <ProfileProvider>
-                            <Header />
-                            <Outlet />
-                            <Footer />
-                        </ProfileProvider>
-                    </PostProvider>
+                    <ProfileProvider>
+                        <Outlet />
+                    </ProfileProvider>
                 </>
             ) : (
                 <Navigate to="/login" />

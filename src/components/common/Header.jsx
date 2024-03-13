@@ -1,19 +1,17 @@
 import LogoIcon from "../../assets/logo.svg";
 import SearchIcon from "../../assets/icons/search.svg";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth.js";
 import { useProfile } from "../../hooks/useProfile.js";
-import { useContext } from "react";
-import { ProfileContext } from "../../context/index.js";
 import Logout from "../auth/Logout.jsx";
 
 const Header = () => {
     const { auth } = useAuth();
     const { state } = useProfile() || {};
-    const location = useLocation();
-    const currentPath = location.pathname;
 
     const user = state?.user ?? auth?.user;
+    console.log(state);
+
     return (
         <>
             <header className="p-1">
@@ -26,40 +24,54 @@ const Header = () => {
 
                     <div>
                         <ul className="flex items-center space-x-5">
-                            {auth?.user && (
+                            <li>
+                                <Link
+                                    to="/createBlog"
+                                    className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
+                                >
+                                    Write
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="search"
+                                    className="flex items-center gap-2 cursor-pointer"
+                                >
+                                    <img src={SearchIcon} alt="Search" />
+                                    <span>Search</span>
+                                </Link>
+                            </li>
+
+                            {auth?.user ? (
                                 <>
-                                    <li>
-                                        <Link
-                                            to="/createBlog"
-                                            className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
-                                        >
-                                            Write
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            to="search"
-                                            className="flex items-center gap-2 cursor-pointer"
-                                        >
-                                            <img
-                                                src={SearchIcon}
-                                                alt="Search"
-                                            />
-                                            <span>Search</span>
-                                        </Link>
-                                    </li>
                                     <li className="flex items-center">
                                         <div className="avater-img bg-orange-600 text-white">
-                                            <img
-                                                className="max-w-full rounded-full"
-                                                src={`${
-                                                    import.meta.env
-                                                        .VITE_SERVER_BASE_URL
-                                                }/uploads/avatar/${
-                                                    user?.avatar
-                                                }`}
-                                                alt={state?.user?.firstName}
-                                            />
+                                            {user?.avatar ? (
+                                                <img
+                                                    className="max-w-full rounded-full"
+                                                    // src={`${
+                                                    //     import.meta.env
+                                                    //         .VITE_SERVER_BASE_URL
+                                                    // }/uploads/avatar/${
+                                                    //     user?.avatar
+                                                    // }`}
+                                                    src={`${
+                                                        import.meta.env
+                                                            .VITE_SERVER_BASE_URL
+                                                    }/uploads/avatar/${
+                                                        user?.avatar
+                                                    }?${Date.now()}`}
+                                                    alt={user?.firstName}
+                                                />
+                                            ) : (
+                                                <div className="avater-img bg-indigo-600 text-white">
+                                                    <span>
+                                                        {user?.firstName.charAt(
+                                                            0,
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            )}
                                         </div>
 
                                         <Link to="/me">
@@ -71,31 +83,15 @@ const Header = () => {
                                     </li>
                                     <Logout />
                                 </>
-                            )}
-
-                            {!auth.user && (
-                                <>
-                                    {currentPath === "/login" && (
-                                        <li>
-                                            <Link
-                                                to="/register"
-                                                className="text-white/50 hover:text-white transition-all duration-200 pr-4"
-                                            >
-                                                Register
-                                            </Link>
-                                        </li>
-                                    )}
-                                    {currentPath === "/register" && (
-                                        <li>
-                                            <Link
-                                                to="/login"
-                                                className="text-white/50 hover:text-white transition-all duration-200 pr-4"
-                                            >
-                                                Login
-                                            </Link>
-                                        </li>
-                                    )}
-                                </>
+                            ) : (
+                                <li>
+                                    <Link
+                                        to="/login"
+                                        className="text-white/50 hover:text-white transition-all duration-200 pr-4"
+                                    >
+                                        Login
+                                    </Link>
+                                </li>
                             )}
                         </ul>
                     </div>

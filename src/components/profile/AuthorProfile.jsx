@@ -30,7 +30,6 @@ export default function AuthorProfile() {
     }, [id]);
     return (
         <>
-            <Header />
             <main className="mx-auto max-w-[1020px] py-8">
                 <div className="container">
                     <div className="flex flex-col items-center py-8 text-center">
@@ -77,8 +76,6 @@ export default function AuthorProfile() {
                     </div>
                 </div>
             </main>
-
-            <Footer />
         </>
     );
 }
