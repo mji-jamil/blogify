@@ -16,26 +16,37 @@ export default function BlogMainCard({ blog, onDelete }) {
         return date.toLocaleDateString("en-GB", options);
     }
 
+    const handleDeleteClick = () => {
+        const shouldDelete = window.confirm(
+            "Are you sure you want to delete this blog?",
+        );
+        if (shouldDelete) {
+            onDelete(blog?.id);
+        }
+    };
+
     return (
         <>
             <div className="blog-card">
-                <img
-                    className="blog-thumb"
-                    src={`${
-                        import.meta.env.VITE_SERVER_BASE_URL
-                    }/uploads/blog/${blog?.thumbnail}`}
-                    alt="Thumbnail"
-                />
+                <Link to={`/blog/${blog.id}`}>
+                    <img
+                        className="blog-thumb"
+                        src={`${
+                            import.meta.env.VITE_SERVER_BASE_URL
+                        }/uploads/blog/${blog?.thumbnail}`}
+                        alt="Thumbnail"
+                    />
+                </Link>
                 <div className="mt-2 relative">
-                    <Link to="/singleBlog">
+                    <Link to={`/blog/${blog.id}`}>
                         <h3 className="text-slate-300 text-xl lg:text-2xl">
                             {blog?.title}
                         </h3>
-                    </Link>
-                    <p className="mb-6 text-base text-slate-500 mt-1">
-                        {blog?.content}
-                    </p>
 
+                        <p className="mb-6 text-base text-slate-500 mt-1">
+                            {blog?.content}
+                        </p>
+                    </Link>
                     <div className="flex justify-between items-center">
                         <div className="flex items-center capitalize space-x-2">
                             <div className="avater-img bg-indigo-600 text-white">
@@ -77,13 +88,16 @@ export default function BlogMainCard({ blog, onDelete }) {
 
                             {showModal && (
                                 <div className="action-modal-container">
-                                    <button className="action-menu-item hover:text-lwsGreen">
-                                        <img src={EditIcon} alt="Edit" />
-                                        Edit
-                                    </button>
+                                    <Link to={`/blog/edit/${blog.id}`}>
+                                        <button className="action-menu-item hover:text-lwsGreen">
+                                            <img src={EditIcon} alt="Edit" />
+                                            Edit
+                                        </button>
+                                    </Link>
                                     <button
                                         className="action-menu-item hover:text-red-500"
-                                        onClick={() => onDelete(blog?.id)}
+                                        // onClick={() => onDelete(blog?.id)}
+                                        onClick={handleDeleteClick}
                                     >
                                         <img src={DeleteIcon} alt="Delete" />
                                         Delete

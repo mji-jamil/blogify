@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { BlogContext } from "../context";
 import { actions } from "../actions";
 import useAxios from "../hooks/useAxios";
@@ -20,7 +20,7 @@ const HomePage = () => {
 
     const fetchInitialData = async () => {
         try {
-            // Clear previous data
+            // Clearing previous data
             dispatch({
                 type: actions.blog.DATA_FETCHED,
                 data: { blogs: [] },

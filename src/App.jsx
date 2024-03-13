@@ -7,6 +7,9 @@ import ProfilePage from "./pages/ProfilePage.jsx";
 import PrivateRoutes from "./routes/PrivateRoutes.jsx";
 import BlogEntry from "./components/posts/BlogEntry.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import SingleBlog from "./components/posts/SingleBlog.jsx";
+import Search from "./pages/Search.jsx";
+import EditBlog from "./components/posts/EditBlog.jsx";
 
 const App = () => {
     return (
@@ -16,7 +19,11 @@ const App = () => {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/me" element={<ProfilePage />} />
                     <Route path="/createBlog" element={<BlogEntry />} />
+                    <Route path="/blog/:id" element={<SingleBlog />} />
+                    <Route path="/blog/edit/:id" element={<EditBlog />} />
+                    <Route path="/search" element={<Search />} />
                 </Route>
+
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/register" element={<RegistrationPage />} />
                 <Route path="*" element={<NotFoundPage />} />

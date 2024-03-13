@@ -1,22 +1,24 @@
-import { useForm } from "react-hook-form";
-import { actions } from "../../actions";
-import { useAuth } from "../../hooks/useAuth";
-import useAxios from "../../hooks/useAxios";
+import { useEffect, useState } from "react";
+import { useAuth } from "../../hooks/useAuth.js";
 import { useBlog } from "../../hooks/useBlog.js";
-import { useProfile } from "../../hooks/useProfile";
-import Field from "../common/Field";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import useAxios from "../../hooks/useAxios.js";
+import { useProfile } from "../../hooks/useProfile.js";
+import { useNavigate, useParams } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { actions } from "../../actions/index.js";
+import Field from "../common/Field.jsx";
 
-const BlogEntry = () => {
+export default function EditBlog() {
     const [blogImage, setBlogImage] = useState(null);
     const { auth } = useAuth();
     const { dispatch } = useBlog();
     const { api } = useAxios();
     const { state: profile } = useProfile();
     const navigate = useNavigate();
+    const { id } = useParams();
+    const [blogData, setBlogData] = useState(null);
 
-    const user = profile?.user ?? auth?.user;
+    const user = auth?.user;
 
     const {
         register,
@@ -24,6 +26,21 @@ const BlogEntry = () => {
         formState: { errors },
         setError,
     } = useForm();
+
+    useEffect(() => {
+        const getBlogData = async () => {
+            try {
+                const response = await api.get(
+                    `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${id}`,
+                );
+                setBlogData(response.data);
+            } catch (error) {
+                console.error("Error fetching blog data:", error);
+            }
+        };
+
+        getBlogData();
+    }, [id]);
 
     function generateRandomId() {
         const randomPart = Math.random().toString(36).substring(2, 10);
@@ -34,21 +51,9 @@ const BlogEntry = () => {
         dispatch({ type: actions.blog.DATA_FETCHING });
 
         try {
-            const formDataObj = new FormData();
-            formDataObj.append("title", formData.title);
-            formDataObj.append("tags", formData.tags);
-            formDataObj.append("content", formData.content);
-            if (blogImage) {
-                formDataObj.append("thumbnail", blogImage);
-            }
-            formDataObj.append("author", auth?.user);
-            formDataObj.append("likes", []);
-            formDataObj.append("comments", []);
-            formDataObj.append("createdAt", Date.now());
-            formDataObj.append("id", generateRandomId());
-            const response = await api.post(
-                `${import.meta.env.VITE_SERVER_BASE_URL}/blogs`,
-                formDataObj,
+            const response = await api.patch(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${id}`,
+                formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -56,15 +61,14 @@ const BlogEntry = () => {
                 },
             );
 
-            console.log(response.data.blog.id);
+            console.log(response.data);
+            console.log(response.data.id);
 
-            if (response.status === 201) {
-                dispatch({
-                    type: actions.blog.POST_CREATED,
-                    data: response.data,
-                });
-                navigate(`/blog/${response.data.blog.id}`);
-            }
+            dispatch({
+                type: actions.blog.DATA_EDITED,
+                data: response.data,
+            });
+            navigate(`/`);
         } catch (error) {
             console.error(error);
             dispatch({
@@ -129,6 +133,7 @@ const BlogEntry = () => {
                                     id="title"
                                     name="title"
                                     placeholder="Enter your blog title"
+                                    defaultValue={blogData?.title}
                                 />
                             </Field>
                         </div>
@@ -143,6 +148,7 @@ const BlogEntry = () => {
                                     id="tags"
                                     name="tags"
                                     placeholder="Your Comma Separated Tags Ex. JavaScript, React, Node, Express,"
+                                    defaultValue={blogData?.tags}
                                 />
                             </Field>
                         </div>
@@ -158,6 +164,7 @@ const BlogEntry = () => {
                                     name="content"
                                     placeholder="Write your blog content"
                                     rows="8"
+                                    defaultValue={blogData?.content}
                                 ></textarea>
                             </Field>
                         </div>
@@ -166,13 +173,11 @@ const BlogEntry = () => {
                             className="bg-indigo-600 text-white px-6 py-2 md:py-3 rounded-md hover:bg-indigo-700 transition-all duration-200"
                             type="submit"
                         >
-                            Create Blog
+                            Edit Blog
                         </button>
                     </form>
                 </div>
             </section>
         </main>
     );
-};
-
-export default BlogEntry;
+}

@@ -65,7 +65,7 @@ const Header = () => {
 
                                         <Link to="/me">
                                             <span className="text-white ml-2">
-                                                {user?.firstName}
+                                                {user?.firstName}{" "}
                                                 {user?.lastName}
                                             </span>
                                         </Link>
