@@ -18,6 +18,7 @@ const App = () => {
     return (
         <>
             <Header />
+
             <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route element={<PrivateRoutes />}>

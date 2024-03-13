@@ -5,32 +5,34 @@ import { useAuth } from "../../hooks/useAuth.js";
 import LikeIcon from "../../assets/icons/like.svg";
 import CommentIcon from "../../assets/icons/comment.svg";
 import HeartIcon from "../../assets/icons/heart.svg";
-import HeartFillIcon from "../../assets/icons/heart-filled.svg";
 import LikeFillIcon from "../../assets/icons/like-fill.png";
 
 export default function SingleBlog() {
     const [blogData, setBlogData] = useState(null);
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [isLike, setIsLike] = useState(false);
+    // const [isFavorite, setIsFavorite] = useState(false);
+    // const [isLike, setIsLike] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const { id } = useParams();
-    // const { state } = useProfile();
     const { auth } = useAuth();
     const { api } = useAxios();
+
     useEffect(() => {
         const getBlogData = async () => {
             try {
                 const response = await api.get(
                     `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${id}`,
                 );
+
                 setBlogData(response.data);
+                const hasLiked = response.data.likes.includes(auth?.user?.id);
+                // setIsLike(hasLiked);
             } catch (error) {
                 console.error("Error fetching blog data:", error);
             }
         };
 
         getBlogData();
-    }, [id, commentContent]);
+    }, [id, commentContent, auth?.user?.id]);
 
     const handleLike = async () => {
         try {
@@ -43,15 +45,13 @@ export default function SingleBlog() {
                 ...prevData,
                 likes: response.data.likes,
             }));
-            setIsLike((prevIsLike) => !prevIsLike);
+            // setIsLike((prevIsLike) => !prevIsLike);
         } catch (error) {
             console.error("Error liking blog:", error);
         }
     };
 
     const handleFavorite = async () => {
-        console.log(blogData.id);
-
         try {
             const response = await api.patch(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${
@@ -71,13 +71,11 @@ export default function SingleBlog() {
                 },
             );
 
-            console.log(response);
-
             setBlogData((prevData) => ({
                 ...prevData,
                 isFavorite: response.data.isFavorite,
             }));
-            setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+            // setIsFavorite((prevIsFavorite) => !prevIsFavorite);
         } catch (error) {
             console.error("Error toggling favorite:", error);
         }
@@ -95,8 +93,6 @@ export default function SingleBlog() {
                 },
             );
 
-            console.log(response);
-
             setBlogData((prevData) => ({
                 ...prevData,
                 comments: [...prevData.comments, response.data],
@@ -107,9 +103,32 @@ export default function SingleBlog() {
         }
     };
 
+    const handleDeleteComment = async (commentId) => {
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this comment?",
+        );
+        if (!confirmDelete) {
+            return;
+        }
+        try {
+            await api.delete(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${
+                    blogData.id
+                }/comment/${commentId}`,
+            );
+            setBlogData((prevData) => ({
+                ...prevData,
+                comments: prevData.comments.filter(
+                    (comment) => comment.id !== commentId,
+                ),
+            }));
+        } catch (error) {
+            console.error("Error deleting comment:", error);
+        }
+    };
+
     function formatDate(dateString) {
         const date = new Date(dateString);
-
         const options = { day: "numeric", month: "long", year: "numeric" };
         return date.toLocaleDateString("en-GB", options);
     }
@@ -274,6 +293,16 @@ export default function SingleBlog() {
                                     <p className="text-slate-300">
                                         {comment?.content}
                                     </p>
+                                    {comment?.author?.id === auth?.user?.id && (
+                                        <button
+                                            className="text-red-600"
+                                            onClick={() =>
+                                                handleDeleteComment(comment.id)
+                                            }
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -283,20 +312,21 @@ export default function SingleBlog() {
             <div className="floating-action">
                 <ul className="floating-action-menus">
                     <li onClick={handleLike}>
-                        {isLike ? (
-                            <img src={LikeFillIcon} alt="like" />
-                        ) : (
-                            <img src={LikeIcon} alt="like" />
-                        )}
+                        {/*{isLike ? (*/}
+                        <img src={LikeIcon} alt="like" />
+                        {/*<img src={LikeFillIcon} alt="like" />*/}
+                        {/*) : (*/}
+                        {/*    <img src={LikeIcon} alt="like" />*/}
+                        {/*)}*/}
                         <span>{blogData?.likes?.length}</span>
                     </li>
 
                     <li onClick={handleFavorite}>
-                        {isFavorite ? (
-                            <img src={HeartFillIcon} alt="Favourite" />
-                        ) : (
-                            <img src={HeartIcon} alt="Favourite" />
-                        )}
+                        {/*{isFavorite ? (*/}
+                        {/*    <img src={HeartFillIcon} alt="Favourite" />*/}
+                        {/*) : (*/}
+                        <img src={HeartIcon} alt="Favourite" />
+                        {/*)}*/}
                     </li>
                     <a href="#comments">
                         <li>

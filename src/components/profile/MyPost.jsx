@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react";
 import { actions } from "../../actions/index.js";
 import useAxios from "../../hooks/useAxios.js";
 import { ProfileContext } from "../../context/index.js";
+import { Link } from "react-router-dom";
 
 export default function MyPost() {
     const { state, dispatch } = useContext(ProfileContext);
@@ -58,20 +59,24 @@ export default function MyPost() {
                     <div className="my-6 space-y-4">
                         {blogs.map((blog) => (
                             <div className="blog-card" key={blog.id}>
-                                <img
-                                    className="blog-thumb"
-                                    src={`${
-                                        import.meta.env.VITE_SERVER_BASE_URL
-                                    }/uploads/blog/${blog.thumbnail}`}
-                                    alt="thumbnail"
-                                />
+                                <Link to={`/blog/${blog?.id}`}>
+                                    <img
+                                        className="blog-thumb"
+                                        src={`${
+                                            import.meta.env.VITE_SERVER_BASE_URL
+                                        }/uploads/blog/${blog.thumbnail}`}
+                                        alt="thumbnail"
+                                    />
+                                </Link>
                                 <div className="mt-2">
-                                    <h3 className="text-slate-300 text-xl lg:text-2xl">
-                                        {blog.title}
-                                    </h3>
-                                    <p className="mb-6 text-base text-slate-500 mt-1">
-                                        {blog.content}
-                                    </p>
+                                    <Link to={`/blog/${blog?.id}`}>
+                                        <h3 className="text-slate-300 text-xl lg:text-2xl">
+                                            {blog.title}
+                                        </h3>
+                                        <p className="mb-6 text-base text-slate-500 mt-1">
+                                            {blog.content}
+                                        </p>
+                                    </Link>
 
                                     <div className="flex justify-between items-center">
                                         <div className="flex items-center capitalize space-x-2">

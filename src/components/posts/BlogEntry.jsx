@@ -108,15 +108,20 @@ const BlogEntry = () => {
                                     />
                                 </svg>
                                 <p>Upload Your Image</p>
-                                <input
-                                    type="file"
-                                    name="photo"
-                                    id="photo"
-                                    className="hidden"
-                                    onChange={(e) =>
-                                        setBlogImage(e.target.files[0])
-                                    }
-                                />
+                                <Field error={errors.photo}>
+                                    <input
+                                        {...register("photo", {
+                                            required: "Select a picture",
+                                        })}
+                                        type="file"
+                                        name="photo"
+                                        id="photo"
+                                        className="hidden"
+                                        onChange={(e) =>
+                                            setBlogImage(e.target.files[0])
+                                        }
+                                    />
+                                </Field>
                             </div>
                         </div>
                         <div className="mb-6">

@@ -61,8 +61,8 @@ export default function EditBlog() {
                 },
             );
 
-            console.log(response.data);
-            console.log(response.data.id);
+            // console.log(response.data);
+            // console.log(response.data.id);
 
             dispatch({
                 type: actions.blog.DATA_EDITED,
@@ -112,15 +112,20 @@ export default function EditBlog() {
                                     />
                                 </svg>
                                 <p>Upload Your Image</p>
-                                <input
-                                    type="file"
-                                    name="photo"
-                                    id="photo"
-                                    className="hidden"
-                                    onChange={(e) =>
-                                        setBlogImage(e.target.files[0])
-                                    }
-                                />
+                                <Field error={errors.photo}>
+                                    <input
+                                        {...register("photo", {
+                                            required: "Select a picture",
+                                        })}
+                                        type="file"
+                                        name="photo"
+                                        id="photo"
+                                        className="hidden"
+                                        onChange={(e) =>
+                                            setBlogImage(e.target.files[0])
+                                        }
+                                    />
+                                </Field>
                             </div>
                         </div>
                         <div className="mb-6">
