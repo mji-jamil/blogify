@@ -36,55 +36,102 @@ export default function SingleBlog() {
         };
 
         getBlogData();
-    }, [id, commentContent, auth?.user?.id, isFavorite, isLiked]);
+    }, [id, commentContent, auth?.user?.id]);
 
+    // const handleLike = async () => {
+    //     try {
+    //         const response = await api.post(
+    //             `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${id}/like`,
+    //             { id: auth?.user?.id },
+    //         );
+    //
+    //         setBlogData((prevData) => ({
+    //             ...prevData,
+    //             likes: response.data.likes,
+    //         }));
+    //         // setIsLike((prevIsLike) => !prevIsLike);
+    //     } catch (error) {
+    //         console.error("Error liking blog:", error);
+    //     }
+    // };
     const handleLike = async () => {
         try {
-            const response = await api.post(
+            setIsLiked((prev) => !prev);
+            setBlogData((currentBlogData) => {
+                const alreadyLiked = currentBlogData.likes.some(
+                    (like) => like.id === auth?.user?.id,
+                );
+                let updatedLikes;
+                if (alreadyLiked) {
+                    updatedLikes = currentBlogData.likes.filter(
+                        (like) => like.id !== auth?.user?.id,
+                    );
+                } else {
+                    updatedLikes = [
+                        ...currentBlogData.likes,
+                        { id: auth?.user?.id },
+                    ];
+                }
+                return { ...currentBlogData, likes: updatedLikes };
+            });
+
+            await api.post(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${id}/like`,
                 { id: auth?.user?.id },
             );
-
-            setBlogData((prevData) => ({
-                ...prevData,
-                likes: response.data.likes,
-            }));
-            // setIsLike((prevIsLike) => !prevIsLike);
         } catch (error) {
             console.error("Error liking blog:", error);
+            setIsLiked((prev) => !prev);
         }
     };
-
+    // const handleFavorite = async () => {
+    //     try {
+    //         const response = await api.patch(
+    //             `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${
+    //                 blogData.id
+    //             }/favourite`,
+    //             {
+    //                 author: auth?.user,
+    //                 isFavorite: true,
+    //                 id: blogData.id,
+    //                 title: blogData.title,
+    //                 content: blogData.content,
+    //                 thumbnail: blogData.thumbnail,
+    //                 tags: blogData.tags,
+    //                 likes: blogData.likes,
+    //                 comments: blogData.comments,
+    //                 createdAt: blogData.createdAt,
+    //             },
+    //         );
+    //
+    //         setBlogData((prevData) => ({
+    //             ...prevData,
+    //             isFavourite: response.data.isFavourite,
+    //         }));
+    //         // setIsFavorite((prevIsFavorite) => !prevIsFavorite);
+    //     } catch (error) {
+    //         console.error("Error toggling favorite:", error);
+    //     }
+    // };
     const handleFavorite = async () => {
         try {
+            setIsFavorite(!isFavorite);
             const response = await api.patch(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/blogs/${
                     blogData.id
                 }/favourite`,
-                {
-                    author: auth?.user,
-                    isFavorite: true,
-                    id: blogData.id,
-                    title: blogData.title,
-                    content: blogData.content,
-                    thumbnail: blogData.thumbnail,
-                    tags: blogData.tags,
-                    likes: blogData.likes,
-                    comments: blogData.comments,
-                    createdAt: blogData.createdAt,
-                },
+                { isFavorite: !isFavorite },
             );
 
             setBlogData((prevData) => ({
                 ...prevData,
                 isFavourite: response.data.isFavourite,
             }));
-            // setIsFavorite((prevIsFavorite) => !prevIsFavorite);
         } catch (error) {
             console.error("Error toggling favorite:", error);
+            setIsFavorite(!isFavorite);
         }
     };
-
     const handleComment = async () => {
         try {
             const response = await api.post(
