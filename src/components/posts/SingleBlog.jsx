@@ -6,15 +6,16 @@ import LikeIcon from "../../assets/icons/like.svg";
 import CommentIcon from "../../assets/icons/comment.svg";
 import HeartIcon from "../../assets/icons/heart.svg";
 import LikeFillIcon from "../../assets/icons/like-fill.png";
+import HeartFillIcon from "../../assets/icons/heart-filled.svg";
 
 export default function SingleBlog() {
     const [blogData, setBlogData] = useState(null);
-    // const [isFavorite, setIsFavorite] = useState(false);
-    // const [isLike, setIsLike] = useState(false);
     const [commentContent, setCommentContent] = useState("");
     const { id } = useParams();
     const { auth } = useAuth();
     const { api } = useAxios();
+    const [isLiked, setIsLiked] = useState(false);
+    const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
         const getBlogData = async () => {
@@ -24,15 +25,18 @@ export default function SingleBlog() {
                 );
 
                 setBlogData(response.data);
-                const hasLiked = response.data.likes.includes(auth?.user?.id);
-                // setIsLike(hasLiked);
+                const hasLiked = response.data.likes.some(
+                    (like) => like.id === auth?.user?.id,
+                );
+                setIsLiked(hasLiked);
+                setIsFavorite(response.data.isFavourite);
             } catch (error) {
                 console.error("Error fetching blog data:", error);
             }
         };
 
         getBlogData();
-    }, [id, commentContent, auth?.user?.id]);
+    }, [id, commentContent, auth?.user?.id, isFavorite, isLiked]);
 
     const handleLike = async () => {
         try {
@@ -73,7 +77,7 @@ export default function SingleBlog() {
 
             setBlogData((prevData) => ({
                 ...prevData,
-                isFavorite: response.data.isFavorite,
+                isFavourite: response.data.isFavourite,
             }));
             // setIsFavorite((prevIsFavorite) => !prevIsFavorite);
         } catch (error) {
@@ -312,21 +316,17 @@ export default function SingleBlog() {
             <div className="floating-action">
                 <ul className="floating-action-menus">
                     <li onClick={handleLike}>
-                        {/*{isLike ? (*/}
-                        <img src={LikeIcon} alt="like" />
-                        {/*<img src={LikeFillIcon} alt="like" />*/}
-                        {/*) : (*/}
-                        {/*    <img src={LikeIcon} alt="like" />*/}
-                        {/*)}*/}
+                        <img
+                            src={isLiked ? LikeFillIcon : LikeIcon}
+                            alt="like"
+                        />
                         <span>{blogData?.likes?.length}</span>
                     </li>
-
                     <li onClick={handleFavorite}>
-                        {/*{isFavorite ? (*/}
-                        {/*    <img src={HeartFillIcon} alt="Favourite" />*/}
-                        {/*) : (*/}
-                        <img src={HeartIcon} alt="Favourite" />
-                        {/*)}*/}
+                        <img
+                            src={isFavorite ? HeartFillIcon : HeartIcon}
+                            alt="Favourite"
+                        />
                     </li>
                     <a href="#comments">
                         <li>
