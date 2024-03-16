@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios.js";
 import { useAuth } from "../../hooks/useAuth.js";
@@ -16,6 +16,7 @@ export default function SingleBlog() {
     const { api } = useAxios();
     const [isLiked, setIsLiked] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const getBlogData = async () => {
@@ -28,8 +29,8 @@ export default function SingleBlog() {
                 const hasLiked = response.data.likes.some(
                     (like) => like.id === auth?.user?.id,
                 );
-                setIsLiked(hasLiked);
-                setIsFavorite(response.data.isFavourite);
+                setIsLiked(auth?.user ? hasLiked : false);
+                setIsFavorite(auth?.user ? response.data.isFavourite : false);
             } catch (error) {
                 console.error("Error fetching blog data:", error);
             }
@@ -55,6 +56,10 @@ export default function SingleBlog() {
     //     }
     // };
     const handleLike = async () => {
+        if (!auth?.user) {
+            navigate("/login");
+            return;
+        }
         try {
             setIsLiked((prev) => !prev);
             setBlogData((currentBlogData) => {
@@ -114,6 +119,10 @@ export default function SingleBlog() {
     //     }
     // };
     const handleFavorite = async () => {
+        if (!auth?.user) {
+            navigate("/login");
+            return;
+        }
         try {
             setIsFavorite(!isFavorite);
             const response = await api.patch(
